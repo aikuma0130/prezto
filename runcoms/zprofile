@@ -61,3 +61,46 @@ export LESS='-F -g -i -M -R -S -w -X -z-4'
 if (( $#commands[(i)lesspipe(|.sh)] )); then
   export LESSOPEN="| /usr/bin/env $commands[(i)lesspipe(|.sh)] %s 2>&-"
 fi
+
+export PATH="/usr/local/opt/ruby/bin:/usr/local/lib/ruby/gems/2.6.0/bin:$PATH"
+
+#source <(kubectl completion bash)
+
+export GOPATH=$HOME/go
+export PATH=$PATH:$GOPATH/bin
+export PATH=$HOME/.anyenv/bin:$PATH
+eval "$(anyenv init -)"
+
+# for work
+if [ -f ${HOME}/.zprofile_private ]; then
+  . ${HOME}/.zprofile_private
+fi
+
+# Set width
+if [ -n "${TERM}" ];
+  then SCREEN_WIDTH=$(tput cols);
+  else SCREEN_WIDTH=20;
+fi
+
+# Draw HR function
+echo_hr(){
+  printf -v _hr "%*s" ${SCREEN_WIDTH} && echo ${_hr// /${1--}}
+}
+
+# for git/github alias
+alias gbrowse='hub browse $(ghq list | peco | cut -d "/" -f 2,3 )'
+alias g='hub'
+alias gch='hub checkout $(hub branch | peco |sed s/\*//g)'
+alias gb='hub branch'
+alias ga='hub add'
+alias gd='hub diff'
+alias gco='hub commit'
+alias gs='hub status'
+alias look='cd $(ghq root)/$(ghq list |peco)'
+
+# for jira alias
+alias j='jira'
+alias jsprint='echo "$(echo "タスク一覧" ; echo_hr ; jira sprint ; echo out-of-planning ; echo_hr ; jira out-of-planning ${JIRA_SPRINT})"'
+alias jbrowse='jira browse $(echo "$(jira sprint; jira out-of-planning ${JIRA_SPRINT})" |grep -v '\''^$'\'' |peco |awk '\''{print $3}'\'')'
+alias jstart='jira start $(echo "$(jira sprint; jira out-of-planning ${JIRA_SPRINT})" |grep -v '\''^$'\'' |peco |awk '\''{print $3}'\'')'
+alias jclose='jira trans "課題の解決" $(echo "$(jira sprint; jira out-of-planning ${JIRA_SPRINT})" |grep -v '\''^$'\'' |peco |awk '\''{print $3}'\'')'
