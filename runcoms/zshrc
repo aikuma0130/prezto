@@ -13,3 +13,10 @@ fi
 # Customize to your needs...
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
+alias k='kubectl'
+source <(kubectl completion zsh)
+
+# for kube-ps
+source "/usr/local/opt/kube-ps1/share/kube-ps1.sh"
+PS1='$(kube_ps1)'$PS1

@@ -78,8 +78,8 @@ export PATH="/usr/local/opt/ruby/bin:/usr/local/lib/ruby/gems/2.6.0/bin:$PATH"
 
 export GOPATH=$HOME/go
 export PATH=$PATH:$GOPATH/bin
-export PATH=$HOME/.anyenv/bin:$PATH
-eval "$(anyenv init -)"
+#export PATH=$HOME/.anyenv/bin:$PATH
+#eval "$(anyenv init -)"
 
 # for work
 if [ -f ${HOME}/.zprofile_private ]; then
@@ -96,6 +96,9 @@ fi
 echo_hr(){
   printf -v _hr "%*s" ${SCREEN_WIDTH} && echo ${_hr// /${1--}}
 }
+
+# for rails
+alias be='bundle exec'
 
 # for git/github alias
 alias gbrowse='hub browse $(ghq list | peco | cut -d "/" -f 2,3 )'
@@ -114,3 +117,30 @@ alias jsprint='echo "$(echo "タスク一覧" ; echo_hr ; jira sprint ; echo out
 alias jbrowse='jira browse $(echo "$(jira sprint; jira out-of-planning ${JIRA_SPRINT})" |grep -v '\''^$'\'' |peco |awk '\''{print $3}'\'')'
 alias jstart='jira start $(echo "$(jira sprint; jira out-of-planning ${JIRA_SPRINT})" |grep -v '\''^$'\'' |peco |awk '\''{print $3}'\'')'
 alias jclose='jira trans "課題の解決" $(echo "$(jira sprint; jira out-of-planning ${JIRA_SPRINT})" |grep -v '\''^$'\'' |peco |awk '\''{print $3}'\'')'
+
+# z keys instead of fg command
+fancy-ctrl-z () {
+  if [[ $#BUFFER -eq 0 ]]; then
+    BUFFER="fg"
+    zle accept-line
+  else
+    zle push-input
+    zle clear-screen
+  fi
+}
+zle -N fancy-ctrl-z
+bindkey '^Z' fancy-ctrl-z
+
+# https://qiita.com/lichtshinoza/items/ed03f42614ee5605974d
+export OBJC_DISABLE_INITIALIZE_FORK_SAFETY=YES
+
+# rbenv
+export PATH=$HOME/.rbenv/bin:$PATH
+eval "$(rbenv init -)"
+
+# nodenv
+export PATH="$HOME/.nodenv/bin:$PATH"
+eval "$(nodenv init -)"
+
+# aws-cli
+export AWS_DEFAULT_PROFILE=playground
